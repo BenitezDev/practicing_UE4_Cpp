@@ -15,6 +15,10 @@ class ESNE_API UEsneWidget : public UUserWidget
 	GENERATED_BODY()
 public:
 
-	// Native on key down
+	// ...
 	FReply NativeOnKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
+
+	/** Set overlapping elems number */
+	UFUNCTION(BlueprintImplementableEvent)
+	void SetOverlappingElemsNumber(int nElems);
 };
