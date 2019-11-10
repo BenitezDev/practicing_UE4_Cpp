@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+//#include "Components/SphereComponent.h"
 #include "EsneActor.generated.h"
 
 UCLASS()
@@ -36,4 +37,13 @@ public:
     // Call a BP method from C++
     UFUNCTION(BlueprintImplementableEvent)
     void CppMethod();
+
+protected:
+
+	/** Sphere component */
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	class USphereComponent* SphereComponent;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	FColor DebugDrawColor;
 };

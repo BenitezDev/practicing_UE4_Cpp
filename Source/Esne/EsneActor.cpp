@@ -2,6 +2,7 @@
 
 
 #include "EsneActor.h"
+#include "Components/SphereComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogEsneActor, Display, All);
 
@@ -10,14 +11,22 @@ AEsneActor::AEsneActor()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
+	SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("CodeSphereComp"));
 }
 
 // Called when the game starts or when spawned
 void AEsneActor::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	// Reference component created from BP
+	//
+	//UActorComponent* pSphereComp = GetComponentByClass(USphereComponent::StaticClass());	
+	//if (pSphereComp != nullptr)
+	//{
+	//	SphereComponent = Cast<USphereComponent>(pSphereComp);
+	//}
 }
 
 // Called every frame
@@ -34,20 +43,10 @@ void AEsneActor::Tick(float DeltaTime)
 // 
 void AEsneActor::FromBPToCpp()
 {
-    FVector ActorPos = GetActorLocation();
-
-    // Print every N frames
-    if (GFrameNumber % 55 == 0)
-    {
-        /*
-            UE_LOG(
-                Category,
-                LogLevel,
-                Text,
-                (variadic) Text parameters
-        */
-        UE_LOG(LogEsneActor, Warning, TEXT("Esto es un string, la posicion del actor es : %s"), *ActorPos.ToString());
-    }
+	if (SphereComponent != nullptr)
+	{
+		SphereComponent->SetSphereRadius(SphereComponent->GetScaledSphereRadius() * 2.0f);
+	}
 }
 
 
