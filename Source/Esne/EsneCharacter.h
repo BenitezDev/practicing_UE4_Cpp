@@ -21,6 +21,10 @@ class AEsneCharacter : public ACharacter
 
 public:
 
+	/** Character initialized delegate */
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCharacterInitialized);
+	FCharacterInitialized OnCharacterInitialized;
+
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseTurnRate;
@@ -33,6 +37,9 @@ public:
 
 	AEsneCharacter();
 
+	/** Begin play */
+	void BeginPlay() override;
+
 	/** Increment Overlaps */
 	void IncrementOverlaps();
 
@@ -42,6 +49,10 @@ public:
 	/** Get num overlaps */
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE int32 GetNumOverlaps() { return m_NumOverlaps; }
+
+	/** Is character initialized */
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE bool IsCharacterInitialized() const { return m_bInitialized; }
 
 protected:
 
@@ -96,5 +107,9 @@ protected:
 	/** Num of overlapping elements */
 	UPROPERTY(Transient)
 	int32 m_NumOverlaps = 0;
+
+	/** Has the character been initialized */
+	UPROPERTY(Transient)
+	bool m_bInitialized = false;
 };
 

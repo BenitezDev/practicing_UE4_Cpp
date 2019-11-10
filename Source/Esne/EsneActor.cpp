@@ -25,13 +25,30 @@ void AEsneActor::BeginPlay()
 	//
 	SphereComponent->OnComponentBeginOverlap.AddUniqueDynamic(this, &AEsneActor::OnBeginOverlap);
 	SphereComponent->OnComponentEndOverlap.AddUniqueDynamic(this, &AEsneActor::OnEndOverlap);
+
+	// Delayed initialization 
+	//
+	/*
+
+
+	if (character is initialized)
+	{
+		update whatever
+	}
+	else
+	{
+		subscribe to character.OnCharacterInitialized
+			then -> update whatever
+	}
+
+
+	*/
 }
 
 // Called every frame
 void AEsneActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-    UE_LOG(LogEsneActor, Display, TEXT("Hello"));
     CppMethod();
 
     // Broadcast the delegate, send parameter
@@ -46,7 +63,8 @@ void AEsneActor::FromBPToCpp()
 		SphereComponent->SetSphereRadius(SphereComponent->GetScaledSphereRadius() * 2.0f);
 	}
 }
-
+
+
 void AEsneActor::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (AEsneCharacter* pEsneCharacter = Cast<AEsneCharacter>(OtherActor))
