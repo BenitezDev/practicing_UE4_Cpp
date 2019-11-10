@@ -22,3 +22,8 @@ void AEsneHUD::BeginPlay()
 		}
 	}
 }
+
+TArray<UUserWidget*> AEsneHUD::GetWidgets() const
+{
+	return m_pWidgets;
+}

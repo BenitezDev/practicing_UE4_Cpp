@@ -7,6 +7,14 @@
 #include "Components/InputComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
+
+#include "DrawDebugHelpers.h"
+
+//
+#include "EsneWidget.h"
+#include "EsneHUD.h"
+#include "Kismet/GameplayStatics.h"
+//
 #include "GameFramework/SpringArmComponent.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -47,6 +55,18 @@ AEsneCharacter::AEsneCharacter()
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 }
 
+void AEsneCharacter::IncrementOverlaps()
+{
+	m_NumOverlaps++;
+	UpdateWidgetInfo();
+}
+
+void AEsneCharacter::DecrementOverlaps()
+{
+	m_NumOverlaps--;
+	UpdateWidgetInfo();
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Input
 
@@ -76,6 +96,40 @@ void AEsneCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInpu
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AEsneCharacter::OnResetVR);
 }
 
+UEsneWidget* AEsneCharacter::GetEsneWidget(AEsneHUD* pEsneHUD) const
+{
+	// boilerplate code
+	//
+	 TArray<UUserWidget*> pWidgets = pEsneHUD->GetWidgets();
+
+	 // Obtain esne widget by predicate using a lambda function
+	 //
+	 UUserWidget** pUserWidget = pWidgets.FindByPredicate([&](UUserWidget* pWidget) 
+		 {
+			 UEsneWidget* pEsneWidget = Cast<UEsneWidget>(pWidget);
+			 return pEsneWidget != nullptr;
+		 });
+
+	 if (pUserWidget != nullptr)
+	 {
+		 return (UEsneWidget*) *pUserWidget;
+	 }
+
+	 
+	 // Simple way of obtaining the esne widget
+	 //
+	 //for (UUserWidget* pWidget : pWidgets)
+	 //{
+		// UEsneWidget* pEsneWidget = Cast<UEsneWidget>(pWidget);
+		// if (pEsneWidget != nullptr)
+		// {
+		//	 return pEsneWidget;
+		// }
+	 //}
+
+	 return nullptr;
+}
+
 
 void AEsneCharacter::OnResetVR()
 {
@@ -91,6 +145,32 @@ void AEsneCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector Locatio
 {
 		StopJumping();
 }
+
+void AEsneCharacter::UpdateWidgetInfo() const
+{
+	// Obtain EsneWidget object
+	// Call SetOverlappingElemsNumber
+
+	if (APlayerController * pController = Cast<APlayerController>(GetController()))
+	{
+		if (AEsneHUD * pEsneHUD = Cast<AEsneHUD>(pController->GetHUD()))
+		{
+			UEsneWidget* pEsneWidget = GetEsneWidget(pEsneHUD);
+			if (pEsneWidget != nullptr)
+			{
+				pEsneWidget->SetOverlappingElemsNumber(m_NumOverlaps);
+			}
+		}
+	}
+
+	// Alternative way of obtaining player controller
+	//
+	//if (APlayerController * pController = UGameplayStatics::GetPlayerController(this, 0))
+	//{
+
+	//}
+}
+
 
 void AEsneCharacter::TurnAtRate(float Rate)
 {

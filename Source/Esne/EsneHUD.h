@@ -17,12 +17,17 @@ class ESNE_API AEsneHUD : public AHUD
 
 public:
 
-	// Begin play
-	virtual void BeginPlay() override;
-
 	// Widget classes
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<TSubclassOf<UUserWidget>> Widgets;
+
+public:
+
+	// Begin play
+	virtual void BeginPlay() override;
+
+	/** Get all widgets */
+	TArray<UUserWidget*> GetWidgets() const;
 
 private:
 

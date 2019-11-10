@@ -18,8 +18,8 @@ class AEsneCharacter : public ACharacter
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
+
 public:
-	AEsneCharacter();
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
@@ -28,6 +28,20 @@ public:
 	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
+
+public:
+
+	AEsneCharacter();
+
+	/** Increment Overlaps */
+	void IncrementOverlaps();
+
+	/** Decrement Overlaps */
+	void DecrementOverlaps();
+
+	/** Get num overlaps */
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE int32 GetNumOverlaps() { return m_NumOverlaps; }
 
 protected:
 
@@ -58,15 +72,29 @@ protected:
 	/** Handler for when a touch input stops. */
 	void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
 
+	/** Update widget info */
+	void UpdateWidgetInfo() const;
+
 protected:
+
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	// End of APawn interface
 
+	/** Get the esne widget instance */
+	class UEsneWidget* GetEsneWidget(class AEsneHUD* pEsneHUD) const;
+
 public:
+
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+protected:
+
+	/** Num of overlapping elements */
+	UPROPERTY(Transient)
+	int32 m_NumOverlaps = 0;
 };
 
